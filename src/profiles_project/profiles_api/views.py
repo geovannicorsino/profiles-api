@@ -40,3 +40,36 @@ class HelloApiView(views.APIView):
 
     def delete(self, request, pk=None):
         return Response({'method': 'delete'})
+
+
+class HelloViewSet(viewsets.ViewSet):
+    serializer_class = serializers.HelloSerializer
+
+    def list(self, request):
+        a_viewset = [
+            'Use actions(list, create, ...)',
+            'Random url'
+        ]
+
+        return Response({'message': 'Hello!', 'a_viewset': a_viewset})
+
+    def create(self, request):
+        serializer = serializers.HelloSerializer(data=request.data)
+
+        if serializer.is_valid():
+            name = serializer.data.get('name')
+            return Response(status=status.HTTP_201_CREATED, data={'name': name})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        return Response(data={'get': 'by pk'})
+
+    def update(self, request, pk=None):
+        return Response({'method': 'put'})
+
+    def partial_update(self, request, pk=None):
+        return Response({'method': 'patch'})
+
+    def destroy(self, request, pk=None):
+        return Response({'method': 'delete'})
